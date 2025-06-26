@@ -105,7 +105,7 @@ pub(crate) async fn get_gacha_data(player_id: String, server_sender: &Sender<Mes
         "https://gmserver-api.aki-game2.com/gacha/record/query"
     };
 
-    for card_pool_type in 1..=7 {
+    for card_pool_type in 1..=9 {
         let _ = server_sender.send(Normal(format!("正在获取卡池 {} 的数据", card_pool_type)));
         param.card_pool_type = card_pool_type;
 

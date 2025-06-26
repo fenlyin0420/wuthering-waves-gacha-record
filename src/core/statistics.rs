@@ -34,11 +34,11 @@ pub(crate) type GachaStatistics = BTreeMap<i32, GachaStatisticsData>;
 
 pub(crate) async fn gacha_statistics(player_id: String, server_sender: &Sender<MessageType>) -> Result<(String, GachaStatistics), Error> {
     // 从服务获取抽卡数据
-    let (player_id, gacha_data) = get_gacha_data(player_id, server_sender).await?;
+    let (player_id, saved_gacha_data) = get_gacha_data(player_id, server_sender).await?;
 
     let mut statistics: GachaStatistics = GachaStatistics::new();
 
-    for (card_pool_type, data) in gacha_data {
+    for (card_pool_type, data) in saved_gacha_data {
         let mut statistics_data = GachaStatisticsData {
             card_pool_type,
             total: 0,
@@ -61,7 +61,7 @@ pub(crate) async fn gacha_statistics(player_id: String, server_sender: &Sender<M
                 5 => {
                     statistics_data.five_count += 1;
 
-                    statistics_data.detail.push(GachaStatisticsDataItem {
+                    statistics_data.detail.insert(0, GachaStatisticsDataItem {
                         name: item.name,
                         count: inner_count,
                         resource_id: item.resource_id,
