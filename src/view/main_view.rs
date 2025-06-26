@@ -305,6 +305,7 @@ impl eframe::App for MainView {
                     ctx.set_style(style);
                 }
 
+                // 获取数据更新
                 let update_button = ui.button("获取数据更新");
                 if update_button.clicked() {
                     info!("开始刷新数据...");
@@ -407,15 +408,35 @@ impl eframe::App for MainView {
                                                     item.pull_count,
                                                     item.detail.len()
                                                 ));
-                                                ui.horizontal_wrapped(|ui| {
-                                                    ui.set_max_width(285.0);
-                                                    for item in item.detail {
-                                                        ui.label(format!(
-                                                            "{}[{}]",
-                                                            item.name, item.count
-                                                        ));
-                                                    }
-                                                });
+                                                for detail_item in &item.detail {
+                                                    ui.horizontal(|ui| {
+                                                        ui.add_sized(
+                                                            [80.0, 20.0],
+                                                            egui::Label::new(format!("{}", detail_item.name)),
+                                                        );
+
+                                                        let progress = if detail_item.count > 0 {
+                                                            detail_item.count as f32 / 90.0
+                                                        } else {
+                                                            0.0
+                                                        };
+                                                        let bar_color = if detail_item.count < 60 {
+                                                            Color32::from_rgb(76, 175, 80) // 绿色
+                                                        } else if detail_item.count < 72 {
+                                                            Color32::from_rgb(255, 193, 7) // 黄色
+                                                        } else {
+                                                            Color32::from_rgb(244, 67, 54) // 红色
+                                                        };
+                                                        ui.add(
+                                                            egui::ProgressBar::new(progress)
+                                                                .desired_width(120.0)
+                                                                .rounding(2.0)
+                                                                .fill(bar_color)
+                                                        );
+
+                                                        ui.label(format!("[{}]", detail_item.count));
+                                                    });
+                                                }
                                             });
                                         }
                                     });
