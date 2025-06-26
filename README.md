@@ -38,6 +38,6 @@
 [Github 下载](https://github.com/fenlyin0420/wuthering-waves-gacha-record/releases/tag/v0.7.0)
 
 ## 截图
-![img](https://github.com/fenlyin0420/wuthering-waves-gacha-record/images/light-theme.png)
-![img](https://github.com/fenlyin0420/wuthering-waves-gacha-record/images/dark-theme.png)
+![img](https://github.com/fenlyin0420/wuthering-waves-gacha-record/raw/master/images/light-theme.png)
+![img](https://github.com/fenlyin0420/wuthering-waves-gacha-record/raw/masterimages/dark-theme.png)
 
