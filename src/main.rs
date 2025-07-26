@@ -38,7 +38,7 @@ async fn main() -> eframe::Result {
 
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_resizable(false)
+            .with_resizable(true)
             .with_maximize_button(false)
             .with_inner_size([900.0, 520.0])
             .with_icon(icon),
@@ -48,7 +48,7 @@ async fn main() -> eframe::Result {
     };
 
     eframe::run_native(
-        format!("鸣潮抽卡记录工具 v{}", VERSION).as_str(),
+        format!("鸣潮抽卡分析工具 v{}", VERSION).as_str(),
         options,
         Box::new(|cc| {
             Ok(Box::new(MainView::new(cc)))

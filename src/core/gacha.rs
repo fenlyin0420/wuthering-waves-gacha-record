@@ -49,7 +49,7 @@ pub(crate) type SavedGachaData = BTreeMap<i32, Vec<GachaData>>;
 pub(crate) struct RequestParam {
     // 同 resources_id
     card_pool_id: String,
-    // 卡池类型（写代码时范围为 1-7）
+    // 卡池类型（写代码时范围为 1-9）
     card_pool_type: i32,
     // 固定为 zh-Hans
     language_code: String,

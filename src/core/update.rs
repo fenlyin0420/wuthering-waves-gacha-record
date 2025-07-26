@@ -26,7 +26,7 @@ pub(crate) struct Assets {
 
 pub(crate) async fn check_update() -> Result<Release, Error> {
     let client = reqwest::Client::new();
-    let result = client.get("https://api.github.com/repos/ningnao/wuthering-waves-gacha-record/releases/latest")
+    let result = client.get("https://api.github.com/repos/fenlyin0420/wuthering-waves-gacha-record/releases/latest")
         .header("User-Agent", "wuthering-waves-gacha-record")
         .send()
         .await?
@@ -36,7 +36,7 @@ pub(crate) async fn check_update() -> Result<Release, Error> {
     match result {
         Ok(release) => {
             if release.tag_name == format!("v{}", VERSION) {
-                return Err(Error::msg("无更新"));
+                // return Err(Error::msg("无更新"));
             }
             Ok(release)
         }

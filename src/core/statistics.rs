@@ -17,6 +17,8 @@ pub(crate) struct GachaStatisticsData {
     pub(crate) four_count: i32,
     pub(crate) three_count: i32,
     pub(crate) pull_count: i32,
+    pub(crate) current_pity_streak: i32, /* 当前连歪数 */
+    pub(crate) max_pity_streak: i32, /* 最高连歪数 */
     pub(crate) detail: Vec<GachaStatisticsDataItem>,
 }
 
@@ -28,6 +30,7 @@ pub(crate) struct GachaStatisticsDataItem {
     pub(crate) count: i32,
     pub(crate) resource_id: i32,
     pub(crate) resource_type: String,
+    pub(crate) up_flag: String,
 }
 
 pub(crate) type GachaStatistics = BTreeMap<i32, GachaStatisticsData>;
@@ -46,6 +49,8 @@ pub(crate) async fn gacha_statistics(player_id: String, server_sender: &Sender<M
             four_count: 0,
             three_count: 0,
             pull_count: 0,
+            current_pity_streak: 0,
+            max_pity_streak: 0,
             detail: vec![],
         };
 
@@ -53,6 +58,15 @@ pub(crate) async fn gacha_statistics(player_id: String, server_sender: &Sender<M
         let mut inner_count = 0;
         // 出金抽数（用于统计未出金抽数）
         let mut get_five_pull_count = 0;
+        // 常驻角色和武器
+        let non_up_list = [
+            "凌阳",
+            "卡卡罗",
+            "鉴心",
+            "安可",
+            "维里奈"
+        ];
+        let mut is_first_pity = true;
         for item in data {
             inner_count += 1;
             statistics_data.total += 1;
@@ -60,12 +74,27 @@ pub(crate) async fn gacha_statistics(player_id: String, server_sender: &Sender<M
             match item.quality_level {
                 5 => {
                     statistics_data.five_count += 1;
+                    // 检查是否为UP角色
+                    let is_up = !non_up_list.contains(&item.name.as_str()) ;
+                    let up_flag = if is_up { "" } else { "歪" };
+
+                    // 记录连歪数
+                    if !is_up {
+                        statistics_data.current_pity_streak += 1;
+                        statistics_data.max_pity_streak = statistics_data.max_pity_streak.max(statistics_data.current_pity_streak);
+                        is_first_pity = false;
+                    } else if is_first_pity && is_up {
+                        statistics_data.current_pity_streak = 0;
+                    } else {
+                        is_first_pity = true;
+                    }
 
                     statistics_data.detail.insert(0, GachaStatisticsDataItem {
                         name: item.name,
                         count: inner_count,
                         resource_id: item.resource_id,
                         resource_type: item.resource_type,
+                        up_flag: up_flag.to_string(),
                     });
 
                     get_five_pull_count += inner_count;

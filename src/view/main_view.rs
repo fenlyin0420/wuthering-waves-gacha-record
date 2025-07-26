@@ -11,7 +11,7 @@ use crate::gacha_statistics;
 use crate::widgets::pie_chart::PieChart;
 use eframe::glow::Context;
 use egui::FontFamily::Proportional;
-use egui::{CentralPanel, Color32, ComboBox, FontData, FontId, TextStyle, Visuals};
+use egui::{CentralPanel, Color32, ComboBox, FontData, FontId, RichText, TextStyle, Visuals};
 use egui_commonmark::{CommonMarkCache, CommonMarkViewer};
 use serde::{Deserialize, Serialize};
 use std::cmp::min;
@@ -403,10 +403,12 @@ impl eframe::App for MainView {
                                                 item.pie_chart.show(ui);
 
                                                 ui.label(format!(
-                                                    "当前累计[{}]抽，已垫[{}]抽，5星[{}]个",
+                                                    "当前累计[{}]抽，已垫[{}]抽，5星[{}]个\n当前连歪{}次，历史最高连歪{}次",
                                                     item.total,
                                                     item.pull_count,
-                                                    item.detail.len()
+                                                    item.detail.len(),
+                                                    item.current_pity_streak,
+                                                    item.max_pity_streak
                                                 ));
                                                 for detail_item in &item.detail {
                                                     ui.horizontal(|ui| {
@@ -434,7 +436,10 @@ impl eframe::App for MainView {
                                                                 .fill(bar_color)
                                                         );
 
-                                                        ui.label(format!("[{}]", detail_item.count));
+                                                        ui.horizontal(|ui| {
+                                                            ui.label(format!("[{}]", detail_item.count));
+                                                            ui.label(RichText::new(&detail_item.up_flag).color(egui::Color32::RED));
+                                                        });
                                                     });
                                                 }
                                             });
@@ -519,6 +524,8 @@ struct GachaStatisticsView {
     pull_count: i32,
     pie_chart: PieChart,
     detail: Vec<GachaStatisticsDataItem>,
+    current_pity_streak: i32,
+    max_pity_streak: i32,
 }
 
 impl MainView {
@@ -553,6 +560,8 @@ impl MainView {
                     pull_count: gacha_statistics_data.pull_count,
                     pie_chart,
                     detail: gacha_statistics_data.detail.clone(),
+                    current_pity_streak: gacha_statistics_data.current_pity_streak,
+                    max_pity_streak: gacha_statistics_data.max_pity_streak,
                 };
 
                 gacha_statistic_view_vec.push(gacha_statistic_view);
