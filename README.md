@@ -35,7 +35,7 @@
 2. 点击`获取新用户`按钮等待片刻
 
 ## 下载
-[Github 下载](https://github.com/fenlyin0420/wuthering-waves-gacha-record/releases/tag/v0.7.0)
+[Github 下载](https://github.com/fenlyin0420/wuthering-waves-gacha-record/releases/tag/v0.9.0)
 
 ## 截图
 ![img](https://github.com/fenlyin0420/wuthering-waves-gacha-record/raw/master/images/light-theme.png)
