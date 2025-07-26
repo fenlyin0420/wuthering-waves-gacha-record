@@ -36,7 +36,7 @@ pub(crate) async fn check_update() -> Result<Release, Error> {
     match result {
         Ok(release) => {
             if release.tag_name == format!("v{}", VERSION) {
-                // return Err(Error::msg("无更新"));
+                return Err(Error::msg("无更新"));
             }
             Ok(release)
         }

@@ -410,6 +410,17 @@ impl eframe::App for MainView {
                                                     item.current_pity_streak,
                                                     item.max_pity_streak
                                                 ));
+                                                // 在数组头部插入一个为数据，作为当前垫数的统计
+                                                item.detail.insert(
+                                                    0,
+                                                    GachaStatisticsDataItem {
+                                                        name: "???".to_string(),
+                                                        count: item.pull_count,
+                                                        resource_id: 0,
+                                                        resource_type: "fake".to_string(),
+                                                        up_flag: "".to_string(),
+                                                    },
+                                                );
                                                 for detail_item in &item.detail {
                                                     ui.horizontal(|ui| {
                                                         ui.add_sized(
@@ -429,6 +440,7 @@ impl eframe::App for MainView {
                                                         } else {
                                                             Color32::from_rgb(244, 67, 54) // 红色
                                                         };
+                                                        
                                                         ui.add(
                                                             egui::ProgressBar::new(progress)
                                                                 .desired_width(120.0)
@@ -437,8 +449,12 @@ impl eframe::App for MainView {
                                                         );
 
                                                         ui.horizontal(|ui| {
-                                                            ui.label(format!("[{}]", detail_item.count));
-                                                            ui.label(RichText::new(&detail_item.up_flag).color(egui::Color32::RED));
+                                                            if detail_item.resource_type == "fake" {
+                                                                ui.label(format!("[已垫{}抽]", detail_item.count));
+                                                            } else {
+                                                                ui.label(format!("[{}]", detail_item.count));
+                                                                ui.label(RichText::new(&detail_item.up_flag).color(egui::Color32::RED));
+                                                            }
                                                         });
                                                     });
                                                 }
